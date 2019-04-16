@@ -4,8 +4,6 @@ const { Nuxt, Builder } = require('nuxt')
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-import io2 from 'socket.io-client';
-import VueSocketIO from 'vue-socket.io-extended';
 
 // Import and Set Nuxt.js options
 let config = require('../nuxt.config.js')
@@ -27,8 +25,6 @@ async function start() {
 
   // Give nuxt middleware to express
   app.use(nuxt.render)
-
-  Vue.use(VueSocketIO, io2(`http://localhost:${port}`))
 
   // Sockets.io
   io.on('connection', socket => {
