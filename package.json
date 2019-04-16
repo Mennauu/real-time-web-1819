@@ -5,10 +5,9 @@
   "author": "Menno",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon server/index.js --watch server",
+    "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
