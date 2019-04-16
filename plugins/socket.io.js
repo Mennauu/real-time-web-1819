@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import io from 'socket.io-client';
-import VueSocketIO from 'vue-socket.io-extended';
+// import Vue from 'vue';
+// import io from 'socket.io-client';
+// import VueSocketIO from 'vue-socket.io-extended';
 
-export default ({ store }) => {
-  Vue.use(VueSocketIO, io(`http://localhost`), { store });
-}
+// export default ({ store }) => {
+//   Vue.use(VueSocketIO, io(`http://localhost`), { store });
+// }
