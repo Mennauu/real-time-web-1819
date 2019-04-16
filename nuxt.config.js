@@ -4,6 +4,10 @@ const pkg = require('./package')
 module.exports = {
   mode: 'universal',
 
+  server: {
+    port: 3200
+  },
+
   /*
   ** Headers of the page
   */
@@ -47,6 +51,7 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    'nuxt-vuex-localstorage'
   ],
   /*
   ** Axios module configuration

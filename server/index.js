@@ -36,12 +36,16 @@ async function start() {
       console.log(`${socket.id} disconnected`)
     })
 
-    socket.on('last-messages', (fn) => {
-      fn(messages)
-    })
+    // socket.on('last-messages', (fn) => {
+    //   fn(messages)
+    // })
 
     socket.on('send-message', (message) => {
       io.emit('new-message', message)
+    })
+
+    socket.on('typing', (data) => {
+      socket.broadcast.emit('typing', data);
     })
   })
 
