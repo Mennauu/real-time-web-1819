@@ -1,6 +1,6 @@
 # real-time-web-1819
 
-> My first-class Nuxt.js project
+> My wondrous Nuxt.js project
 
 ## Build Setup
 

@@ -1,0 +1,146 @@
+/********************************
+  1. Custom properties     
+*********************************/
+:root {
+  /* colors */
+ --white: #fff;
+ --gray-light: #f2f2f2;
+ --gray: #bebebe;
+ --gray-dark: #443F45;
+ --black: #212529;
+ --green: #2ecc71;
+ --brown: #a0522d;
+ --red: #e74c3c;
+ --blue: #2c3e50;
+
+ /* Style */
+ --border-radius: 5px;
+}
+
+/********************************
+  2. Base 
+*********************************/
+html {
+  font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+*:focus {outline: none;}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+ }
+
+input {font-size: 1rem; }
+input::placeholder {
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+/********************************
+  3. Typography   
+*********************************/
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #fff;
+}
+
+.subtitle {
+  margin-bottom: 2.5em;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.note {
+  display: block;
+  margin-top: 1em;
+  color: #fff;
+}
+
+.note a {
+  color: #fff;
+}
+
+/********************************
+  4. Content
+*********************************/
+
+/****** 4.1 Containers *********/
+.container--center {
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image: linear-gradient(
+    -225deg,
+    #ffe29f 0%,
+    #ffa99f 48%,
+    #ff719a 100%
+  );
+}
+
+/****** 4.2 Buttons *********/
+
+.button--spotify {
+  background-color: #1db954;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: auto;
+}
+
+.button--spotify:hover {
+  background-color: #179443;
+}
+
+.button {
+  outline: 0;
+  border: 0;
+  padding: 0.8em 4.8em 0.8em 2.4em;
+  border-radius: 5px;
+  font-size: 1em;
+  position: relative;
+  cursor: pointer;
+  transition: 0.4s;
+  text-decoration: none;
+}
+
+.button img {
+  max-height: 1em;
+  margin-left: 0.35em;
+  font-size: 1.3em;
+  position: absolute;
+  right: 2em;
+  top: 0.6em;
+}
+
