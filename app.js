@@ -3,6 +3,9 @@ const request = require('request')
 const cors = require('cors')
 const querystring = require('querystring')
 const cookieParser = require('cookie-parser')
+const SpotifyWebApi = require('spotify-web-api-node')
+const ss = require('socket.io-stream')
+const fs = require('fs')
 
 const app = express()
 const port = 3000
@@ -16,6 +19,13 @@ const client_id = process.env.SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirect_uri = process.env.REDIRECT_URI;
 const stateKey = 'spotify_auth_state'
+
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET
+})
+
+let spotify_token = ''
 
 /**
  * Generates a random string containing numbers and letters
@@ -87,6 +97,8 @@ app.get('/spotify', function (req, res) {
           json: true
         }
 
+        spotify_token = access_token
+
         // use the access token to access the Spotify Web API
         // request.get(options, function (error, response, body) {
         //   console.log(body)
@@ -123,8 +135,14 @@ app.get('/refresh_token', function (req, res) {
 })
 
 let users = []
+let queList = []
 
 io.on('connection', (socket) => {
+
+  spotifyApi.setAccessToken(spotify_token)
+
+  // spotifyApi.setAccessToken(access_token)
+
   // console.log(`A user connected with socket id ${socket.id}`)
 
   // Get array of connected clients
@@ -145,6 +163,7 @@ io.on('connection', (socket) => {
   })
 
   const updateUsers = () => io.emit('users', users)
+  const updateQueList = () => io.emit('add to que', queList)
 
   function removeByUsername(arr, id) {
     var i = arr.length;
@@ -152,12 +171,31 @@ io.on('connection', (socket) => {
       while (--i) {
         var cur = arr[i];
         if (cur.username == id) {
-          console.log(cur.username)
           arr.splice(i, 1);
         }
       }
     }
   }
+
+  // function removeAfterPlaying(arr, id) {
+  //   var i = arr.length;
+
+  //   setTimeout(() => {
+  //     if (i) {
+  //       while (--i) {
+  //         var cur = arr[i]
+  //         if (cur.id == id) {
+  //           arr.splice(i, 1)
+  //           updateQueList()
+  //         }
+  //       }
+  //     }
+  //   }, 3000)
+  // }
+
+  socket.on('stream', (data) => {
+    io.emit('stream', data)
+  })
 
 
   socket.on('typing', (data) => {
@@ -178,16 +216,37 @@ io.on('connection', (socket) => {
     })
   })
 
+  socket.on('searching', (data) => {
+    spotifyApi.searchTracks(data)
+      .then(function (data) {
+        socket.emit('searching', data.body)
+        socket.emit('clicked song', data.body)
+      }, function (err) {
+        console.error(err)
+      })
+  })
+
+  socket.on('add to que', (data) => {
+    queList.push({
+      id: data.id,
+      name: data.name,
+      artist: data.artists[0].name,
+      image: data.album.images[2].url,
+      preview: data.preview_url
+    })
+
+    // removeAfterPlaying(queList, data.id)
+
+    updateQueList()
+
+  })
+
   socket.on('disconnect', () => {
     if (!socket.username) return
 
-    removeByUsername(users, socket.username);
+    removeByUsername(users, socket.username)
 
-    // users.splice(users.indexOf(socket.username), 1)
     updateUsers()
-
-    console.log(users)
-
   })
 })
 

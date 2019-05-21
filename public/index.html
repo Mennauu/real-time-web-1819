@@ -44,8 +44,25 @@
 
 
       <section class="container" id="loggedin">
+        <div class="currently-playing"></div>
         <div class="container--flex">
-          <div class="content--left"></div>
+          <div class="content--left container--center">
+            <div class="playlist">
+              <form id="searchSongs" action="">
+                <input id="numberSearch" placeholder="Search for a song"><button class="button--form">Send</button>
+              </form>
+              <ul id="songs"></ul>
+            </div>
+          </div>
+          <div class="container--center">
+            <div class="quelist">
+              <audio id="audioPlayer">
+                <source src="" type="audio/mp3">
+                Your browser does not support the audio element.
+              </audio>
+              <ul id="que"></ul>
+            </div>
+          </div>
           <div class="content--right">
             <div id="user-profile">
             </div>
@@ -54,7 +71,7 @@
             <div class="chatbox">
               <div class="feedback"></div>
               <ul id="messages"></ul>
-              <form action="">
+              <form id="sendMessage" action="">
                 <input id="m" autocomplete="off" placeholder="Send a message"><button class="button--form">Send</button>
               </form>
             </div>
@@ -92,6 +109,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io-stream.js"></script>
     <script>
       (function () {
 
@@ -111,6 +129,7 @@
         const oauthSource = document.getElementById('oauth-template').innerHTML
         const oauthTemplate = Handlebars.compile(oauthSource)
         const oauthPlaceholder = document.getElementById('oauth')
+        const audioPlayer = document.getElementById('audioPlayer');
         const params = getHashParams();
         const access_token = params.access_token
         const refresh_token = params.refresh_token
@@ -149,6 +168,11 @@
 
                   })
 
+                  socket.on('stream', (data) => {
+                    audioPlayer.src = data
+                    audioPlayer.play();
+                  })
+
                   socket.on('users', (data) => {
                     // https://stackoverflow.com/a/55614231 : Remove duplicates from an array of objects
                     let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
@@ -170,14 +194,72 @@
                   //   $('#messages').append($('<li>').addClass(data.id).text(`${data.username} left the app`));
                   // })
 
-                  $('form').submit((e) => {
+                  $('#sendMessage').submit((e) => {
                     e.preventDefault()
                     socket.emit('chat message', $('#m').val())
                     $('#m').val('')
                     return false
                   })
 
+                  $('#searchSongs').submit((e) => {
+                    e.preventDefault()
+                    socket.emit('searching', $('#numberSearch').val())
+                    $('#numberSearch').val('')
+                    return false
+                  })
+
                   $('#m').bind('keypress', () => socket.emit('typing'))
+
+                  socket.on('searching', (data) => {
+                    let result = ''
+
+                    for (let song of data.tracks.items) {
+                      result += `
+                      <li class="song" id="${song.id}">
+                        <img src="${song.album.images[2].url}" alt="${song.name}">
+                          <div>
+                            <span>${song.name}</span>
+                            <small>${song.artists[0].name}</small>
+                          </div>
+                      </li>`
+                    }
+
+                    $('#songs').html(result)
+                  })
+
+                  socket.on('clicked song', (data) => {
+                    let result = ''
+
+                    for (let song of data.tracks.items) {
+
+                      $(`#${song.id}`).click(() => {
+                        if (song.id === song.id) {
+                          socket.emit('add to que', song)
+                        }
+                      })
+
+                    }
+                  })
+
+                  socket.on('add to que', (data) => {
+                    let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
+                    let queList = ''
+
+                    for (let song of cleanData) {
+                      queList += `
+                      <li class="song" id="${song.id}">
+                        <img src="${song.image}" alt="${song.name}">
+                          <div>
+                            <span>${song.name}</span>
+                            <small>${song.artist}</small>
+                          </div>
+                      </li>`
+
+                      socket.emit('stream', song.preview)
+                    }
+
+                    $('#que').html(queList)
+                  })
 
                   socket.on('typing', (data) => {
                     $('div.feedback').html(`<i class='typing'>${data.username} is typing</i>`)

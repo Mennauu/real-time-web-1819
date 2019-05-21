@@ -263,6 +263,63 @@ p {
   left: 7px;
 }
 
-.feedback {
+/****** 4.5 Playlist and que *********/
 
+.playlist, .quelist {
+  height: 500px;
+  width: 500px;
+  overflow: hidden;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#songs, #que {
+  text-align: left;
+  height: 100%;
+}
+
+.song {
+  padding: .25em .5em;
+}
+
+.song:first-of-type {
+  padding: .5em .5em .25em .5em;
+}
+
+.song:last-of-type {
+  padding: .25em .5em .5em .5em;
+}
+
+.song div {
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: .5em;
+}
+
+.playlist .song div:hover {
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.song span,
+.song small {
+  display: block;
+}
+
+.song img {
+  width: 64px;
+  height: 64px;
+  float: left;
+}
+
+.currently-playing {
+  position: absolute;
+  bottom: 0;
+  left: 100px;
+  height: 150px;
+  width: 100%;
+  max-width: 500px;
+  background: rgba(0, 0, 0, 0.5);
 }
