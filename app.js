@@ -122,9 +122,6 @@ app.get('/refresh_token', function (req, res) {
   })
 })
 
-// let clients = {}
-// let clientList = []
-
 let users = []
 
 io.on('connection', (socket) => {
@@ -135,65 +132,61 @@ io.on('connection', (socket) => {
   // Get User count
   // console.log(io.engine.clientsCount)
 
-  // io.emit('set list', {
-  //   username: socket.username,
-  // })
-
-
   socket.on('new user', (data) => {
-    socket.username = data
-    users.push(socket.username)
-    // clients[socket.username] = socket
+    socket.username = data.username
+    socket.image = data.image
 
-    // const keys = Object.keys(clients)
+    users.push({
+      username: socket.username,
+      image: socket.image
+    })
 
-    // io.emit('user joined', {
-    //   username: data.username,
-    //   usercount: io.engine.clientsCount,
-    //   id: socket.id
-    // })
-
-    // keys.forEach(element => {
-    //   if (clientList.includes(element) === false) {
-    //     clientList.push(element)
-    //   }
-    // })
-
-    // clientList.forEach(user => {
-    //   io.emit('set list', {
-    //     username: user
-    //   })
-    // })
-
-    // console.log(clientList)
-
+    updateUsers()
   })
+
+  const updateUsers = () => io.emit('users', users)
+
+  function removeByUsername(arr, id) {
+    var i = arr.length;
+    if (i) {
+      while (--i) {
+        var cur = arr[i];
+        if (cur.username == id) {
+          console.log(cur.username)
+          arr.splice(i, 1);
+        }
+      }
+    }
+  }
+
 
   socket.on('typing', (data) => {
     io.emit('typing', { username: socket.username })
   })
 
   socket.on('chat message', (data) => {
+    let image
+
+    for (let user of users) {
+      if (user.username === socket.username) image = user.image
+    }
+
     io.emit('chat message', {
       username: socket.username,
+      image: image,
       message: data
     })
   })
 
   socket.on('disconnect', () => {
+    if (!socket.username) return
 
-    io.emit('user left', {
-      username: socket.username,
-      id: socket.id
-    })
+    removeByUsername(users, socket.username);
 
-    delete clients[socket.username]
+    // users.splice(users.indexOf(socket.username), 1)
+    updateUsers()
 
-    clientList.forEach(element => {
-      if (element == socket.username) {
-        clientList.splice(element, 1)
-      }
-    })
+    console.log(users)
 
   })
 })
