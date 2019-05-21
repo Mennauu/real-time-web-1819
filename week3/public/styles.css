@@ -117,14 +117,13 @@ p {
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100vh;
 }
 
-.container--flex {
+#loggedin {
   display: flex;
 }
 
-.container--flex > div {
+#loggedin > div {
   flex: 1;
   position: relative;
 }

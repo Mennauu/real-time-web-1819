@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+    <title>Play Spotify Together</title>
+    <meta name="description" content="Lets you play & listen to music in sync with friends">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,900">
+  </head>
+
+  <body>
+    <main>
+      <section class="container container--center" id="login">
+        <div>
+          <h1 class="title">Play Spotify Together</h1>
+          <p class="subtitle">
+            Lets you
+            <strong>play & listen</strong> to music in
+            <strong>sync with friends</strong>
+          </p>
+
+          <a class="button button--spotify" href="/login">
+            Log in with Spotify
+            <img src="/spotify_icon.png" alt="Spotify Icon">
+          </a>
+          <small class="note">
+            Note: you need a
+            <a href="https://www.spotify.com/nl/premium/?checkout=false">premium account</a>
+          </small>
+        </div>
+      </section>
+
+      <section class="container" id="loggedin">
+        <div class="content--left"></div>
+        <div class="content--right">
+          <div id="user-profile">
+          </div>
+          <div id="oauth">
+          </div>
+          <div class="chatbox">
+            <ul id="messages"></ul>
+            <form action="">
+              <input id="m" autocomplete="off" placeholder="Send a message"><button class="button--form">Send</button>
+            </form>
+          </div>
+        </div>
+        <!-- <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button> -->
+      </section>
+
+      <script id="user-profile-template" type="text/x-handlebars-template">
+        <img class="user-profile--avatar" src="{{images.0.url}}">
+        <span class="user-profile--name"></span>
+      </script>
+
+      <script id="oauth-template" type="text/x-handlebars-template">
+        <!-- <h2>oAuth info</h2>
+        <dl class="dl-horizontal">
+          <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+          <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
+        </dl> -->
+      </script>
+    </main>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="/main.js"></script>
+    <script>
+      $(function () {
+        var socket = io()
+
+        $('form').submit(function (e) {
+          e.preventDefault()
+          socket.emit('chat message', $('#m').val())
+          $('#m').val('')
+          return false
+        })
+
+        socket.on('chat message', function (msg) {
+          $('#messages').append($('<li>').text(msg))
+        })
+      })
+    </script>
+  </body>
+
+</html>
