@@ -4,8 +4,6 @@ const cors = require('cors')
 const querystring = require('querystring')
 const cookieParser = require('cookie-parser')
 const SpotifyWebApi = require('spotify-web-api-node')
-const ss = require('socket.io-stream')
-const fs = require('fs')
 
 const app = express()
 const port = 3000
@@ -177,26 +175,16 @@ io.on('connection', (socket) => {
     }
   }
 
-  // function removeAfterPlaying(arr, id) {
-  //   var i = arr.length;
-
-  //   setTimeout(() => {
-  //     if (i) {
-  //       while (--i) {
-  //         var cur = arr[i]
-  //         if (cur.id == id) {
-  //           arr.splice(i, 1)
-  //           updateQueList()
-  //         }
-  //       }
-  //     }
-  //   }, 3000)
-  // }
+  function removeAfterPlaying(length) {
+    setTimeout(function () {
+      queList.shift()
+      updateQueList()
+    }, length * 30500)
+  }
 
   socket.on('stream', (data) => {
     io.emit('stream', data)
   })
-
 
   socket.on('typing', (data) => {
     io.emit('typing', { username: socket.username })
@@ -235,10 +223,8 @@ io.on('connection', (socket) => {
       preview: data.preview_url
     })
 
-    // removeAfterPlaying(queList, data.id)
-
     updateQueList()
-
+    removeAfterPlaying(queList.length)
   })
 
   socket.on('disconnect', () => {

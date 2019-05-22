@@ -56,10 +56,7 @@
           </div>
           <div class="container--center">
             <div class="quelist">
-              <audio id="audioPlayer">
-                <source src="" type="audio/mp3">
-                Your browser does not support the audio element.
-              </audio>
+              <audio id="audioPlayer"></audio>
               <ul id="que"></ul>
             </div>
           </div>
@@ -109,7 +106,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-stream.js"></script>
     <script>
       (function () {
 
@@ -169,8 +165,20 @@
                   })
 
                   socket.on('stream', (data) => {
-                    audioPlayer.src = data
-                    audioPlayer.play();
+
+                    console.log(audioPlayer.currentTime)
+
+                    if (audioPlayer.currentTime == 0) {
+                      audioPlayer.src = data[0].preview
+                      audioPlayer.play()
+
+                      audioPlayer.onended = function () {
+                        audioPlayer.currentTime = 0;
+                      }
+                    }
+
+
+
                   })
 
                   socket.on('users', (data) => {
@@ -243,6 +251,7 @@
 
                   socket.on('add to que', (data) => {
                     let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
+                    // let lastAddedSong = cleanData.slice(-1)[0]
                     let queList = ''
 
                     for (let song of cleanData) {
@@ -254,9 +263,21 @@
                             <small>${song.artist}</small>
                           </div>
                       </li>`
-
-                      socket.emit('stream', song.preview)
                     }
+
+                    // if (Array.isArray(cleanData) && cleanData.length) {
+                    //   if (cleanData.length > 1) {
+                    //     setTimeout(function () {
+                    //       socket.emit('stream', cleanData)
+                    //     }, cleanData.length * 30000)
+                    //   } else {
+                    //     socket.emit('stream', cleanData)
+                    //   }
+                    // }
+
+                    console.log(cleanData)
+
+                    socket.emit('stream', cleanData)
 
                     $('#que').html(queList)
                   })
