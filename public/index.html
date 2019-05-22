@@ -188,22 +188,22 @@
                     // https://stackoverflow.com/a/55614231 : Remove duplicates from an array of objects
                     let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
                     let users = ''
+                    // let message = ''
 
                     for (let user of cleanData) {
                       users += `<div class='user'><img src='${user.image}' alt='${user.username}' class="user-profile--avatar"><span class="user-profile--name">${user.username}</span></div>`
+                      // message =
+                      //   `<li class="message">
+                      //      <img src="${user.image}" alt="${user.username}" class="message--image">
+                      //      <span class="message--text--join">${user.username} joined the room</span>
+                      //    </li>`
                     }
+
+
+                    // $('#messages').append(message)
 
                     $('#user-profile').html(users)
                   })
-
-                  // socket.on('user joined', (data) => {
-                  //   $('#messages').append($('<li>').addClass(data.id).text(`${data.username} joined the app`));
-                  //   console.log(data.usercount)
-                  // })
-
-                  // socket.on('user left', (data) => {
-                  //   $('#messages').append($('<li>').addClass(data.id).text(`${data.username} left the app`));
-                  // })
 
                   $('#sendMessage').submit((e) => {
                     e.preventDefault()
@@ -225,14 +225,16 @@
                     let result = ''
 
                     for (let song of data.tracks.items) {
-                      result += `
-                      <li class="song" id="${song.id}">
-                        <img src="${song.album.images[2].url}" alt="${song.name}">
-                          <div>
-                            <span>${song.name}</span>
-                            <small>${song.artists[0].name}</small>
-                          </div>
-                      </li>`
+                      if (song.preview_url != null) {
+                        result += `
+                          <li class="song" id="${song.id}">
+                            <img src="${song.album.images[2].url}" alt="${song.name}">
+                              <div>
+                                <span>${song.name}</span>
+                                <small>${song.artists[0].name}</small>
+                              </div>
+                          </li>`
+                      }
                     }
 
                     $('#songs').html(result)
@@ -276,7 +278,7 @@
                     $('div.feedback').html(`<i class='typing'>${data.username} is typing</i>`)
                   })
 
-                  socket.on('chat message', function (data) {
+                  socket.on('chat message', (data) => {
                     $('div.feedback').html('')
 
                     if (data.message !== '') {
@@ -288,6 +290,15 @@
                       $('#messages').append(message);
                     }
                   })
+
+                  // socket.on('user joined', (data) => {
+                  //   $('#messages').append($('<li>').addClass(data.id).text(`${data.username} joined the app`));
+                  //   console.log(data.usercount)
+                  // })
+
+                  // socket.on('user left', (data) => {
+                  //   $('#messages').append($('<li>').addClass(data.id).text(`${data.username} left the app`));
+                  // })
                 })
               }
             })

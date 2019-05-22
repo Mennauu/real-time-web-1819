@@ -165,13 +165,14 @@ io.on('connection', (socket) => {
   const updateUsers = () => io.emit('users', users)
   const updateQueList = () => io.emit('add to que', queList)
 
-  function removeByUsername(arr, id) {
-    var i = arr.length;
+  function removeByUsername(username) {
+    var i = users.length;
     if (i) {
       while (--i) {
-        var cur = arr[i];
-        if (cur.username == id) {
-          arr.splice(i, 1);
+        var cur = users[i];
+        if (cur.username == username) {
+          users.splice(i, 1)
+          updateUsers()
         }
       }
     }
@@ -240,9 +241,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (!socket.username) return
 
-    removeByUsername(users, socket.username)
-
-    updateUsers()
+    removeByUsername(socket.username)
   })
 })
 
