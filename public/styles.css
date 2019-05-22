@@ -39,6 +39,15 @@ html {
 }
 *:focus {outline: none;}
 
+body {
+  background-image: linear-gradient(-225deg,
+    #ffe29f 0%,
+    #ffa99f 48%,
+    #ff719a 100%
+  );
+  overflow: hidden;
+}
+
 ul {
   padding: 0;
   margin: 0;
@@ -51,8 +60,8 @@ input {
   border: 0;
   min-height: 50px;
   width: calc(100% - 70px);
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 input::placeholder {
@@ -101,17 +110,16 @@ p {
   4. Content
 *********************************/
 
+#login,
+#loggedin {
+  display: none;
+}
+
 /****** 4.1 Containers *********/
 
 .container {
   margin: 0 auto;
   min-height: 100vh;
-  background-image: linear-gradient(
-    -225deg,
-    #ffe29f 0%,
-    #ffa99f 48%,
-    #ff719a 100%
-  );
 }
 
 .container--center {
@@ -124,11 +132,31 @@ p {
 
 .container--flex {
   display: flex;
+  height: 100%;
 }
 
 .container--flex > div {
   flex: 1;
   position: relative;
+}
+
+.box {
+  background-color: #212121;
+  height: 721px;
+  margin: 6em 6em 0 6em;
+}
+
+.content--left {
+  background-color: #212121;
+}
+
+.content--center {
+  background-color: black;
+}
+
+.content--right {
+  background-color: lightgray;
+  max-width: calc(100% / 3);
 }
 
 /****** 4.2 Buttons *********/
@@ -177,17 +205,20 @@ p {
   padding: 0 0.8em;
   min-height: 50px;
   max-width: 70px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 /****** 4.3 User *********/
 
 #user-profile {
   text-align: center;
-  padding: 1em 0;
+  padding: 1em;
   z-index: 2;
   position: relative;
   height: 150px;
   display: flex;
+  background-color: #fff;
 }
 
 .user-profile--avatar {
@@ -214,11 +245,21 @@ p {
 
 .chatbox {
   position: relative;
-  z-index: 1;
-  height: calc(100vh - 150px);
+  height: calc(721px - (150px + 86px));
+  background-color: #ece5dd;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  width: 100%;
 }
 
-.chatbox form {
+.chatbox::-webkit-scrollbar {display: none; }
+
+#messages {
+  width: 100%;
+}
+
+#sendMessage {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -226,31 +267,33 @@ p {
   background-color: lightgray;
 }
 
-#messages {
-  position: absolute;
-  bottom: 50px;
-  background: rgba(0, 0, 0, 0.5);
-  height: calc(100vh - 200px);
-  width: 100%;
-}
-
 .message {
   padding: 0.5em;
   display: flex;
-  align-items:center;
+  align-items: center;
 }
 
 .message--image {
   border-radius: 50%;
   height: 50px;
   width: 50px;
+  position: relative;
+  z-index: 1;
 }
 
 .message--text {
   background-color: #fff;
-  margin-left: 0.5em;
+  margin-left: 0.4em;
   padding: 0.5em;
   border-radius: 5px;
+  position: relative;
+}
+
+.message--text:before {
+  content: "\25c0";
+    left: -.7em;
+    position: absolute;
+    color: #fff;
 }
 
 .message--text--join {
@@ -262,26 +305,31 @@ p {
   display: none;
 }
 
-.typing {
-  background-color: #fff;
+.feedback {
+  color: gray;
   border-radius: 5px;
   padding: 0 0.4em;
   margin: 0;
   position: absolute;
-  bottom: 95px;
-  left: 7px;
+  top: 126px;
+  z-index: 2;
+  font-size: 70%;
+  right: .5em;
+  font-style: italic;
 }
 
 /****** 4.5 Playlist and que *********/
 
 .playlist, .quelist {
-  height: 500px;
-  width: 500px;
-  overflow: hidden;
+  height: 721px;
   overflow-y: scroll;
-  background: rgba(0, 0, 0, 0.5);
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
   position: relative;
 }
+
+.playlist::-webkit-scrollbar,
+.quelist::-webkit-scrollbar {display: none; }
 
 .loading:after {
   content: "Waiting...";
@@ -293,19 +341,48 @@ p {
 
 #songs, #que {
   text-align: left;
-  height: 100%;
+}
+
+#que {
+  padding-top: 1em;
+}
+
+#que .song:first-of-type {
+  padding:0 1em .25em 1em;
+}
+
+#searchSongs {
+  padding: 1em;
+  position: sticky;
+  top: 0;
+  background-color: #212121;
+  box-shadow: 0 0 10px 0 #111;   
+}
+
+#searchSongs input {
+  min-height: 40px;
+  width: calc(100% - 85.83px);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+#searchSongs .button--form {
+  min-height: 40px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  max-width: 85.83px;
 }
 
 .song {
-  padding: .25em .5em;
+  padding: .25em 1em;
 }
 
 .song:first-of-type {
-  padding: .5em .5em .25em .5em;
+  padding: 1em 1em .25em 1em;
 }
 
 .song:last-of-type {
-  padding: .25em .5em .5em .5em;
+  padding: .25em 1em 1em 1em;
 }
 
 .song div {
@@ -324,6 +401,15 @@ p {
 .song span,
 .song small {
   display: block;
+}
+
+.song small {
+  color: #b3b3b3;
+}
+
+.song span {
+  font-weight: bold;
+  color: #fff;
 }
 
 .song img {

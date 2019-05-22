@@ -136,19 +136,28 @@ let users = []
 let queList = []
 
 io.on('connection', (socket) => {
-
   spotifyApi.setAccessToken(spotify_token)
 
-  // socket.emit('stream', queList)
+  const updateUsers = () => io.emit('users', users)
+  const updateQueList = () => io.emit('add to que', queList)
 
-  // spotifyApi.setAccessToken(access_token)
+  const removeByUsername = (username) => {
+    users.forEach((element, index) => {
+      if (element.username === username) {
+        users.splice(index, 1)
+        updateUsers()
+      }
+    })
+  }
 
-  // console.log(`A user connected with socket id ${socket.id}`)
-
-  // Get array of connected clients
-  // console.log(Object.keys(io.sockets.sockets))
-  // Get User count
-  // console.log(io.engine.clientsCount)
+  const removeAfterPlaying = (name) => {
+    if (queList[0]) {
+      if (queList[0].name === name) {
+        queList.shift()
+        updateQueList()
+      }
+    }
+  }
 
   socket.on('new user', (data) => {
     socket.username = data.username
@@ -162,44 +171,9 @@ io.on('connection', (socket) => {
     updateUsers()
   })
 
-  const updateUsers = () => io.emit('users', users)
-  const updateQueList = () => io.emit('add to que', queList)
+  socket.on('stream', (data) => io.emit('stream', data))
 
-  function removeByUsername(username) {
-    var i = users.length;
-    if (i) {
-      while (--i) {
-        var cur = users[i];
-        if (cur.username == username) {
-          users.splice(i, 1)
-          updateUsers()
-        }
-      }
-    }
-  }
-
-  function removeAfterPlaying(length) {
-    setTimeout(function () {
-      queList.shift()
-      updateQueList()
-    }, length * 31000)
-  }
-
-  socket.on('stream', (data) => {
-    let playlist = data
-
-    // if (ended == 'ended') {
-    //   playlist.shift()
-    //   queList.shift()
-    //   updateQueList()
-    // }
-    io.emit('stream', playlist)
-
-  })
-
-  socket.on('typing', (data) => {
-    io.emit('typing', { username: socket.username })
-  })
+  socket.on('typing', () => io.emit('typing', { username: socket.username }))
 
   socket.on('chat message', (data) => {
     let image
@@ -235,8 +209,9 @@ io.on('connection', (socket) => {
     })
 
     updateQueList()
-    removeAfterPlaying(queList.length)
   })
+
+  socket.on('remove from que', (name) => removeAfterPlaying(name))
 
   socket.on('disconnect', () => {
     if (!socket.username) return

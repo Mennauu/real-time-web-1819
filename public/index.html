@@ -9,13 +9,6 @@
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700,900">
-    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> -->
-    <style type="text/css">
-      #login,
-      #loggedin {
-        display: none;
-      }
-    </style>
   </head>
 
   <body>
@@ -44,30 +37,31 @@
 
 
       <section class="container" id="loggedin">
-        <div class="currently-playing"></div>
-        <div class="container--flex">
-          <div class="content--left container--center">
-            <div class="playlist">
-              <form id="searchSongs" action="">
-                <input id="numberSearch" placeholder="Search for a song"><button class="button--form">Send</button>
-              </form>
-              <ul id="songs"></ul>
+        <div class="box">
+          <div class="container--flex">
+            <div class="content--left">
+              <div class="playlist">
+                <form id="searchSongs" action="">
+                  <input id="numberSearch" placeholder="Search for a song"><button class="button--form">Search</button>
+                </form>
+                <ul id="songs"></ul>
+              </div>
             </div>
-          </div>
-          <div class="container--center">
-            <div class="quelist">
-              <audio id="audioPlayer"></audio>
-              <ul id="que"></ul>
+            <div class="content--center">
+              <div class="quelist">
+                <audio id="audioPlayer"></audio>
+                <ul id="que"></ul>
+              </div>
             </div>
-          </div>
-          <div class="content--right">
-            <div id="user-profile">
-            </div>
-            <div id="oauth">
-            </div>
-            <div class="chatbox">
+            <div class="content--right">
+              <div id="user-profile">
+              </div>
+              <div id="oauth">
+              </div>
               <div class="feedback"></div>
-              <ul id="messages"></ul>
+              <div class="chatbox">
+                <ul id="messages"></ul>
+              </div>
               <form id="sendMessage" action="">
                 <input id="m" autocomplete="off" placeholder="Send a message"><button class="button--form">Send</button>
               </form>
@@ -147,13 +141,13 @@
                 'Authorization': 'Bearer ' + access_token
               },
               success: function (response) {
-                userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+                userProfilePlaceholder.innerHTML = userProfileTemplate(response)
 
-                $('#login').hide();
-                $('#loggedin').show();
+                $('#login').hide()
+                $('#loggedin').show()
 
                 $(function () {
-                  var socket = io();
+                  var socket = io()
 
                   socket.on('connect', () => {
 
@@ -170,15 +164,27 @@
 
                     $("#que").removeClass('loading')
 
-                    if (Array.isArray(data) && data.length) {
+                    if (data.length) {
 
                       if (audioPlayer.currentTime == 0) {
-                        audioPlayer.src = data[0].preview
-                        audioPlayer.play()
+                        if (data[0].preview) {
+                          audioPlayer.src = data[0].preview
+                          const promise = audioPlayer.play()
+                          if (promise !== undefined) {
+                            promise.then(_ => {
+                              // Autoplay started!
+                            }).catch(error => {
+                              // console.log(error)
+                            })
+                          }
+                        }
 
                         audioPlayer.onended = function () {
-                          audioPlayer.currentTime = 0;
-                          // socket.emit('stream', data, 'ended')
+                          audioPlayer.currentTime = 0
+
+                          if (data.length > 0) {
+                            socket.emit('remove from que', data[0].name)
+                          }
                         }
                       }
                     }
@@ -186,7 +192,7 @@
 
                   socket.on('users', (data) => {
                     // https://stackoverflow.com/a/55614231 : Remove duplicates from an array of objects
-                    let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
+                    let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]
                     let users = ''
                     // let message = ''
 
@@ -275,7 +281,7 @@
                   })
 
                   socket.on('typing', (data) => {
-                    $('div.feedback').html(`<i class='typing'>${data.username} is typing</i>`)
+                    $('div.feedback').html(`<small class='typing'>${data.username} is typing</small>`)
                   })
 
                   socket.on('chat message', (data) => {
@@ -287,8 +293,10 @@
                            <img src="${data.image}" alt="${data.username}" class="message--image">
                            <span class="message--text">${data.message}</span>
                          </li>`
-                      $('#messages').append(message);
+                      $('#messages').append(message)
                     }
+
+                    $("div.chatbox").animate({ scrollTop: $('div.chatbox').prop("scrollHeight") }, 50)
                   })
 
                   // socket.on('user joined', (data) => {
@@ -304,26 +312,26 @@
             })
           } else {
             // render initial screen
-            $('#login').show();
-            $('#loggedin').hide();
+            $('#login').show()
+            $('#loggedin').hide()
           }
 
-          document.getElementById('obtain-new-token').addEventListener('click', function () {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function (data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
+          // document.getElementById('obtain-new-token').addEventListener('click', function () {
+          //   $.ajax({
+          //     url: '/refresh_token',
+          //     data: {
+          //       'refresh_token': refresh_token
+          //     }
+          //   }).done(function (data) {
+          //     access_token = data.access_token;
+          //     oauthPlaceholder.innerHTML = oauthTemplate({
+          //       access_token: access_token,
+          //       refresh_token: refresh_token
+          //     });
+          //   });
+          // }, false);
         }
-      })();
+      })()
     </script>
   </body>
 
