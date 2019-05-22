@@ -5,23 +5,11 @@
 <br>
 
 <p align="center">
-  <a href="https://browser-technologies-1819.herokuapp.com/">
-    <img src="https://img.shields.io/badge/week-1-brightgreen.svg?style=flat-square" alt="week1">
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://browser-technologies-1819.herokuapp.com/">
-    <img src="https://img.shields.io/badge/week-2-brightgreen.svg?style=flat-square" alt="week2">
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://browser-technologies-1819.herokuapp.com/">
-    <img src="https://img.shields.io/badge/week-3-red.svg?style=flat-square" alt="week3">
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://browser-technologies-1819.herokuapp.com/">
+  <a href="https://play-spotify-together.herokuapp.com/">
     <img src="https://img.shields.io/badge/demo-LIVE-brightgreen.svg?style=flat-square" alt="demo">
   </a>
   &nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/Mennauu/browser-technologies-1819/blob/master/LICENSE">
+  <a href="https://github.com/Mennauu/real-time-web-1819/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License">
   </a>
 </p> 

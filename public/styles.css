@@ -343,12 +343,15 @@ p {
   text-align: left;
 }
 
-#que {
-  padding-top: 1em;
+#que .song:first-of-type {
+  padding: 1em;
+  background-color: #0c0c0c;
+  position: relative;
+  margin-bottom: 0.25em;
 }
 
-#que .song:first-of-type {
-  padding:0 1em .25em 1em;
+#que .song:before {
+
 }
 
 #searchSongs {
@@ -418,12 +421,14 @@ p {
   float: left;
 }
 
-.currently-playing {
-  position: absolute;
-  bottom: 0;
-  left: 100px;
-  height: 150px;
-  width: 100%;
-  max-width: 500px;
-  background: rgba(0, 0, 0, 0.5);
+.progress {
+  width: 1px;
+  height: 3px;
+  background: #1db954;
+  transition: width .1s linear;
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
 }
