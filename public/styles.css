@@ -271,6 +271,15 @@ p {
   overflow: hidden;
   overflow-y: scroll;
   background: rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.loading:after {
+  content: "I'm loading... Just a second, please!";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #songs, #que {

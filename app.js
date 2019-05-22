@@ -139,6 +139,8 @@ io.on('connection', (socket) => {
 
   spotifyApi.setAccessToken(spotify_token)
 
+  // socket.emit('stream', queList)
+
   // spotifyApi.setAccessToken(access_token)
 
   // console.log(`A user connected with socket id ${socket.id}`)
@@ -179,11 +181,19 @@ io.on('connection', (socket) => {
     setTimeout(function () {
       queList.shift()
       updateQueList()
-    }, length * 30500)
+    }, length * 31000)
   }
 
   socket.on('stream', (data) => {
-    io.emit('stream', data)
+    let playlist = data
+
+    // if (ended == 'ended') {
+    //   playlist.shift()
+    //   queList.shift()
+    //   updateQueList()
+    // }
+    io.emit('stream', playlist)
+
   })
 
   socket.on('typing', (data) => {

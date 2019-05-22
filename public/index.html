@@ -162,23 +162,26 @@
                       image: response.images[0].url
                     })
 
+                    $("#que:empty").addClass('loading')
+
                   })
 
                   socket.on('stream', (data) => {
 
-                    console.log(audioPlayer.currentTime)
+                    $("#que").removeClass('loading')
 
-                    if (audioPlayer.currentTime == 0) {
-                      audioPlayer.src = data[0].preview
-                      audioPlayer.play()
+                    if (Array.isArray(data) && data.length) {
 
-                      audioPlayer.onended = function () {
-                        audioPlayer.currentTime = 0;
+                      if (audioPlayer.currentTime == 0) {
+                        audioPlayer.src = data[0].preview
+                        audioPlayer.play()
+
+                        audioPlayer.onended = function () {
+                          audioPlayer.currentTime = 0;
+                          // socket.emit('stream', data, 'ended')
+                        }
                       }
                     }
-
-
-
                   })
 
                   socket.on('users', (data) => {
@@ -250,8 +253,7 @@
                   })
 
                   socket.on('add to que', (data) => {
-                    let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()];
-                    // let lastAddedSong = cleanData.slice(-1)[0]
+                    let cleanData = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]
                     let queList = ''
 
                     for (let song of cleanData) {
@@ -264,18 +266,6 @@
                           </div>
                       </li>`
                     }
-
-                    // if (Array.isArray(cleanData) && cleanData.length) {
-                    //   if (cleanData.length > 1) {
-                    //     setTimeout(function () {
-                    //       socket.emit('stream', cleanData)
-                    //     }, cleanData.length * 30000)
-                    //   } else {
-                    //     socket.emit('stream', cleanData)
-                    //   }
-                    // }
-
-                    console.log(cleanData)
 
                     socket.emit('stream', cleanData)
 
