@@ -1,6 +1,6 @@
 <h1 align="center">Real Time Web @cmda-minor-web 1819</h1>
 
-<p align="center"><b>I want to listen to a playlist synchronously with my friends, in which everyone can search for songs and add them to a que</p></b>
+<p align="center"><b>I want to listen to a playlist synchronously with my friends, in which everyone can search for songs and add them to a que. Meanwhile, we can send messages to eachother.</p></b>
 
 <br>
 
@@ -16,388 +16,215 @@
 
 <br>
 
-![preview](readme-assets/preview.png)
+![preview](github/preview.png)
 
 <br>
 
 <!-- ☝️ replace this description with a description of your own work -->
 ## Introduction
-This Beat Box Kit is made as part of a course from [@cmda-minor-web 18-19](https://github.com/cmda-minor-web/browser-technologies-1819). In this course I had to make a website with the aim that all users, with all browser can see the core functionality. The idea was to build the website based on [progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement).
+This "Play Spotify Together" app is made as part of a course from [@cmda-minor-web 18-19](https://github.com/cmda-minor-web/real-time-web-1819). In this course I had to create a real time web application based on [sockets](https://socket.io/). 
 
 Some resources possess an emoticon to help you understand which type of content you may find:
 
 - 📖: Documentation or article
-- 🛠: Tool or library
+- 🛠: Tool, code or library
 - 📹: Video
 
 <!-- Maybe a table of contents here? 📚 -->
 ## Table of Contents
 
-- [Installation](#installation)
-- [Feature research](#feature-research)
-  - [No JavaScript](#no-javascript)
-    - [Problems](#problems)
-    - [How to achieve](#how-to-achieve)
-    - [Examples](#examples)
-  - [Broadband](#broadband)
-    - [Problems](#problems)
-    - [How to achieve](#how-to-achieve)
-    - [Examples](#examples)
-  - [Implementations](#implementations)
-    - [Turn off images](#turn-off-images)
-    - [Disable custom fonts](#disable-custom-fonts)
-    - [Disable JavaScript](#disable-javascript)
-    - [Turn off colors](#turn-off-colors)
-    - [Turn off broadband internet](#turn-off-broadband-internet)
-    - [Cookies](#cookies)
-    - [LocalStorage doesn't work](#localstorage-doesnt-work)
-    - [Mouse and trackpad don't work](#mouse-and-trackpad-dont-work)
-- [Beatbox Kit](#beatbox-kit)
-  - [Progressive enhancement](#progressive-enhancement)
-    - [Functional and reliable](#functional-and-reliable)
-    - [Usable](#usable)
-    - [Pleasureable](#pleasureable)
-  - [Feature detection](#feature-detection)
-    - [HTML](#html)
-    - [CSS](#css)
-    - [JavaScript](#javascript)
-  - [Audits](#audits)
+- [Setup and Installation](#setup-and-installation)
+- [Learning process](#learning-process)
+- [Play Spotify Together](#play-spotify-together)
+  - [Authorization](#authorization)
+  - [Users](#users)
+  - [Messages](#messages)
+  - [Searching](#searching)
+  - [Adding](#adding)
+  - [Playing](#playing)
 - [Wishlist](#withlist)
 - [Sources](#sources)
 - [License](#license)
 
 <!-- How about a section that describes how to install this project? 🤓 -->
-## Installation
-1. Open your terminal
-2. Change the directory to a folder in which you want to place the files
+## Setup and Installation
+
+You will need to register your own Spotify App and set the credentials in a .env file.
+
+1. Create an application on the [Spotify's Developer Site](https://developer.spotify.com/my-applications/).
+
+2. Add redirect_uri in the Spotify Developer panel
+```bash
+http://localhost:3000/spotify/
+```
+
+3. Create a .env file. You can find the id and secret in the Spotify Developers panel.
+```bash
+CLIENT_URL=http://localhost:3000/
+REDIRECT_URI=http://localhost:3000/spotify/
+SPOTIFY_CLIENT_ID={{client_id}}
+SPOTIFY_CLIENT_SECRET={{client_secret}}
+```
+
+4. Open your terminal
+
+5. Change the directory to a folder in which you want to place the files
 ```bash
 cd /~path
 ```
-3. Clone the repository (you're going to need [Git](https://www.linode.com/docs/development/version-control/how-to-install-git-on-linux-mac-and-windows/))
+6. Clone the repository (you're going to need [Git](https://www.linode.com/docs/development/version-control/how-to-install-git-on-linux-mac-and-windows/))
 ```bash
-git clone https://github.com/Mennauu/browser-technologies-1819
+git clone https://github.com/Mennauu/real-time-web-1819
 ```
-4. Change directory to repository
+7. Change directory to repository
 ```bash
-cd browser-technologies-1819
+cd real-time-web-1819
 ```
-5. Install dependencies from [package.json](https://github.com/Mennauu/browser-technologies-1819/blob/master/package.json)
+8. Install dependencies from [package.json](https://github.com/Mennauu/browser-technologies-1819/blob/master/package.json)
 ```bash
 npm install
 ```
-6. Run application with [Node](https://nodejs.org/en/)
+
+9. Place the .env file in the root folder
+
+10. Run application with [Node](https://nodejs.org/en/)
 ```bash
 node app.js
 ```
 
-## Feature research
-The goal was to research at least two features that are being used on websites and figure out what impact these features have on sites I, and you, know and normally use.
+## Learning process
+The goal was to learn about sockets before taking on the big challenge (which was to create this app)
 
 <details>
-  <summary>Do you really want to read my research? It's boring!</summary>
+  <summary>Read about my learning process</summary>
 
-### No JavaScript
-Websites without JavaScript.
+  I figured the fastest way to learn about sockets was to follow the [getting started example](https://socket.io/get-started/chat/) that socket.io provides, though I didn't want to use jQuery and I wanted to create it using [nuxt.js](https://nuxtjs.org/), since I also wanted to learn some more about Vue.js.
 
-#### Problems
-The biggest problem right now is that most modern websites use JavaScript as of today (11-03-2019). Websites are build in JavaScript frameworks, like react or vue. When this is the case, disabling JavaScript means that literally nothing is being shown; sometimes only an error message displaying "Enable JavaScript to use this website".
+  The "tutorial" was easy to follow. After a couple of minutes I had a server running with multiple socket connections (of own browser tabs, ofcourse). I created a small design for a simple chat application.
 
-There is a portion of people that deliberately turned off JavaScript: [0.2% of pageviews from worldwide traffic across all devices in the fourt quarter 2016 had JavaScript disabled.](https://blockmetry.com/blog/javascript-disabled). When your website relies on JavaScript, this portion won't be able to use your website. 
+  ![chats](github/chats.png)
 
-JavaScript requires a stable internet connection to load properly. If your user has a poor internet connection, your website might take too long to load, making the user retreat from your website.
+  I added a couple of features (mentioned below) and had a nice looking chat application in the end.
 
-> * 📖 [Blockmetry: JavaScript Disabled](https://blockmetry.com/blog/javascript-disabled)
+  * Fill in a name
+  * Sending a message was blocked for filling in a name
+  * Send a message
+  * I used https://robohash.org/${this.user} to get unique images per user
+  * Every user had it's own chat message color
 
-#### How to achieve
-In all browsers you can turn off JavaScript in the browser settings. You can follow the steps, for your specific browser, on this page: [WikiHow: Disable JavaScript](https://www.wikihow.com/Disable-JavaScript) to turn off JavaScript.
+  As of writing this readme the chat application doesn't work anymore, and I didn't make any screenshots so I can't show the end result. I probably broke it trying to do some crazy stuff in Vue.
 
-> * 📖 [WikiHow: Disable JavaScript](https://www.wikihow.com/Disable-JavaScript)
+   ___
 
-#### Examples
-The first website I wanted to try without JavaScript is a site I created myself: abc-legal.com. Turns out, the website works loads extremely fast without JavaScript and looks nearly identical. The two things that don't work are slideshows and the ability to change from language. We could solve those problems by showing a static image for the slideshow, and hard-linking the different languages options (these are being loaded dynamically by JavaScript, right now).
-
-The second website I went to was ark.io. I know this website is made using Vue.JS, and guess what, nothing loads! You are left with a blank page. They don't even provide you with an error message.
-
-The last website I decided to visit was smashingmagazine.com, because Vitaly (our previous teacher) was part of making it, and is all for using CSS over JavaScript - and is hyped about a great User Experience, for all users. Damn, this website is really, really good without JavaScript. Functionalities that need JavaScript to work are not being shown. The search bar is replaced with a Smashing Magazine Google Search - so you can still use the search functionality, without JavaScript. The only downside I could find is that images from the authors are not loaded. They are loaded through JavaScript.
-
-### Broadband
-Load websites by simulating a slow 3G network connection.
-
-#### Problems
-If the functionality from your website takes to long to load on a slow network connection, the user will retreat from your website.
-
-#### How to achieve
-You can achieve a slow network connection by opening your console and navigating to "Network". Once there you can click on "Online" with the arrow pointing down, and choose a preset, like 3G slow.
-
-#### Examples
-Once again I was very curious how fast smashingmagazine.com would load on a slow 3G network connection. It took 9 seconds to load everything, which is very fast! However, it loads everything at the same time, as if the entire page is loaded asynchronous. It could only show HTML first, and afterwards load CSS.
-
-### Implementations
-
-#### Turn off images
-The alt text from the images on the homepage could be removed.
-
-- [ ] Also implement a placeholder on the subject page and detail page for images
-
-#### Disable custom fonts
-If custom fonts are disabled calibri is used
-
-#### Disable JavaScript
-No difference
-
-#### Turn off colors
-No difference
-
-#### Turn off broadband internet
-Website is optimized to work with a bad internet connection
-
-- [ ] Only change the etag of html files if there is actually a change in the html
-
-#### Cookies
-We do not use cookies, yet
-
-#### LocalStorage doesn't work
-LocalStorage is not used
-
-#### Mouse and trackpad don't work
-You can tab through the website completely (and easily)
-
-- [ ] Add a back button, or breadcrumbs
+> * 🛠 [socket.io](https://socket.io/)
+> * 🛠 [Nuxt.Js](https://nuxtjs.org/)
+> * 📖 [Getting started with socket.io](https://socket.io/get-started/chat/)
+> * 📖 [What Socket.IO is](https://socket.io/docs/)
 
 </details>
 
-## Beatbox Kit
+## Play Spotify Together
+With the Play Spotify Together app you can use your Spotify Account to search for songs and add them to a shared playlist in which you will listen to synchronously with other users of the app. You can also send messages to eachother.
 
-With the Beatbox Kit you can create your own beat by pressing the shown key or clicking on the concerning button, as much as you like, or at the same time. If you check the "Loop" input, the buttons you press will keep playing (in a loop).
+![preview](github/preview.png)
 
-![preview](readme-assets/schets.png)
+### Authorization
+To be able to use the app you need a Spotify Premium account. As soon as you hit the "Log in with spotify" button you will be redirected to Spotify's authentication process. On success you will be redirected to the 'inside' of the application.
 
-### Progressive enhancement
-we start with a simple usable experience, and step by step enrich the user experience when we are sure that browsers support this enrichment.
+To make this possible I had to create a new application at the [Spotify Developer site](https://developer.spotify.com/my-applications/). They provided me with a client id and a secret, which are used during the authentication process.
 
-#### Functional and reliable
-Let's start by turning off JavaScript and CSS!
+Spotify created their own [Web API Auth Example](https://github.com/spotify/web-api-auth-examples/tree/master/authorization_code). I used this authorization code flow as a base for the project.
 
-![no-js-and-css](readme-assets/functional.png)
+![login](github/login.png)
 
-Wow! That looks awful, but it works! In all browsers that are used today. It's different than the main idea though, because JavaScript is disabled, you can't add audio events to keybinds or buttons. Without JavaScript you can listen to the beat samples, and select 4 beats in the form. After submitting the form, an mp3 file will be returned with your beat based on the options you have chosen!
+### Users
+Once you're authorized you will be connected as a socket. First a "new user" is emitted in which the socket gets a name and image based on the Spotify Account information that's been sent from the client. The information is stored in an array on the server. 
 
-<details>
-  <summary>Check audit results for this version!</summary>
+Your image and name will be directly shown on the screen, at the connected users section, for everyone. When you disconnect, your information that's stored in the array on the server will be removed and your image and name will dissapear immediately for everyone.
 
-  ![audit results](readme-assets/audit-nothing.jpg)
-
-</details>
-
-#### Usable
-Let's turn on CSS, to make it so that users won't be like: "What the freak am I looking at!?".
-
-![no-js-and-css](readme-assets/usable-new.png)
-
-That's a lot more pleasant to look at, which makes it actually usable. It's still pretty boring though.
-
-<details>
-  <summary>Check audit results for this version!</summary>
-
-  ![audit results](readme-assets/audit-nothing.jpg)
-
-</details>
-
-#### Pleasurable
-Let's turn on everything!
-
-![preview](readme-assets/beatbox-kit.png)
-
-That's more like it. You can now create your beat (live!) by pressing on buttons on your keyboard, cool!
-
-<details>
-  <summary>Check audit results for this version!</summary>
-
-  ![audit results](readme-assets/audit.png)
-
-</details>
-
-### Feature detection
-
-#### HTML
-Just one that really stands out and is worth mentioning. If the audio tag is not supported, we show the embed tag! You're welcome, Internet Explorer 5.
-
-```HTML
-<audio src="./sounds/ahh.wav" type="audio/wav" controls>
-  <embed src='./sounds/ahh.wav' autostart='false' loop='false' width='300' height='100'>
-</audio>
-```
-
-#### CSS
-I use a lot of modern CSS properties, so we're gonna have to write a lot of fallbacks.
-
-1. Custom properties
-
-I make use of custom properties but [support isn't amazing for older browsers](https://caniuse.com/#search=custom%20properties). Luckily, fallbacks are easy to implement.
-
-```CSS
-:root {
-  --black: #212529;
-  --red: #cf4436;
-  --font-nt-sans: "Nunito Sans", sans-serif;
-  --border-radius: 5px;
-  ...
-}
-```
-
-```CSS
-body {
-  font-family: "Nunito Sans", sans-serif; /* fallback */
-  font-family: var(--font-nt-sans);
-  color: #000; /* fallback */
-  color: var(--black);
-  ...
-}
-```
-
-2. REM and EM
-
-Both are widely [supported in al browsers](https://caniuse.com/#search=rem), except for really old browser versions, like Internet Explorer 7 and below
-
-```CSS 
-header {
-  padding: 96px 16px; /* fallback */
-  padding: 6em 1em;
-}
-```
-
-3. Calc()
-
-Supported in all modern browsers. [Bad support or partial support](https://caniuse.com/#search=calc) for older versions.
+![users](github/users.png)
 
 
-```CSS 
-h1 {
-  font-size: 28px; /* fallback */
-  font-size: calc(28px + (70 - 28) * ((100vw - 300px) / (1600 - 300)));
-}
-```
+### Messages
+There is one room in which all connected users are. If you type, everyone will be able to see that you are typing (at the top-right of the chatbox). If multiple people are typing, the message will mention the last user that started typing.
 
-4. Gradients
+When the form on the client side is filled in, and "send" has been pressed, the message will go to the server (in which the username and image of the sender are also being sent) and return to all connected clients.
 
-Really [bad support in Safari](https://caniuse.com/#search=css%20gradient), and iOS Safari. 
+![chat](github/chat.png)
 
-```CSS
-div {
-  background: #e5e5e5; /* fallback */
-  background: radial-gradient(ellipse at center, #e5e5e5 39%, #cacaca 100%);
-}
-```
+### Searching
+We can make calls to the [Spotify Web API](https://developer.spotify.com/documentation/web-api/). I used the [Spotify Web API Node](https://www.npmjs.com/package/spotify-web-api-node) wrapper to help make the request. The wrapper isn't really necessary for the application in its current state, however if more data from the Spotify Web API is needed (later on) the wrapper will come in very helpfull.
 
-5. Others
-
-There are more like: CSS Zoom, Transform, transitions etc. I use them, but they don't require a fallback. They are only there for more pleasure, not as necessity.
-
-#### JavaScript
-
-1. ES6
-
-Most of the JavaScript code I write is based on ES6, for example: arrow functions and variables written with const and let instead of var. Luckily, we have babel that can convert this code. Ofcourse, we check the converted code and clean up.
+Because we have an access token from the authorization process we can use this token to make calls. We only have to set it for the wrapper.
 
 ```JavaScript
-/* Before */
-const data = () => { ... } 
-/* After */
-function appendData() { ... }
+spotifyApi.setAccessToken('<access_token>');
 ```
+When the form on the client side is filled in, and "search" has been pressed, the data will go to the server and an API call to the Spotify Web API will be made based on the given data. The response will be like the object below.
 
-2. Remove()
-
-Remove() isn't [supported in older versions of modern browsers](https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove) and not at all in Internet Explorer. Because of this, in Internet Explorer the variant that works without JavaScript is always shown.
-
-However, there is a [bulletproof way to remove elements](https://dzone.com/articles/removing-element-plain). Score!
-
-```JavaScript
-/* before */
-div.remove()
-/* after */
-div.parentNode.removeChild(div)
-```
-> * 📖 [DZONE: JavaScript remove() method](https://blockmetry.com/blog/javascript-disabled)
-
-3. forEach() on NodeList
-
-Internet Explorer doesn't support a regular forEach on a NodeList (neither do old versions of modern browsers), which means the entire site breaks on IE 9, 10 and 11 and older browsers. We have to fix that.
-I found a solution on [Stack Overflow](https://stackoverflow.com/questions/13433799/why-doesnt-nodelist-have-foreach).
-
-```JavaScript
-const keyDivs = document.querySelectorAll('.key')
-/* before */
-keyDivs.forEach(key => {
-  key.addEventListener('click', playClickedSound)
-  key.addEventListener('transitionend', removeClass)
-})
-/* after */
-Array.prototype.forEach.call(keyDivs, function(key) {
-  key.addEventListener('click', playClickedSound)
-  key.addEventListener('transitionend', removeClass)
-})
-```
-
-4. Audio type support
-
-This one is huge, because without it the core functionality could break (audio will say it's not supported, instead of showing the fallback)
-
-I found this solution from David Wals: [Detect supported audio formats](https://davidwalsh.name/detect-supported-audio-formats-javascript)
-
-```javascript
-if(supportsAudioType() === "maybe") { ... } // Usage
-
-function supportsAudioType() {
-  var audio;
-
-  if (!audio) audio = document.createElement('audio');
-  return audio.canPlayType('audio/wav');
+```json
+{
+  "name": "Golpe Maestro",
+  "popularity": 42,
+  "preview_url":
+    "https://p.scdn.co/mp3-preview/4ac44a56e3a4b7b354c1273d7550bbad38c51f5d",
+  "track_number": 1,
+  "type": "track",
+  "uri": "spotify:track:3Qm86XLflmIXVm1wcwkgDK"
 }
 ```
 
-> * 📖 [[Detect supported audio formats with JavaScript](https://davidwalsh.name/detect-supported-audio-formats-javascript)
+the server will return the response to the client once the response has been received. It will only be returned to the user (socket) that searched for the song in the first place.
 
-### Audits
-I did multiple (google lighthouse) audits throughout the project (to check for performance and accessibility). Performance was always 100%, but accessibility was hanging on 91%; there was one problem. Best practice is 93% (you only get 100% if you use HTTP2). SEO is 100%.
+![search](github/search.png)
 
-![Audit no fix](readme-assets/audit-without-fix.png)
+### Adding
+After searching for songs you can click on a result to add the song to the que (playlist). You can't add a song that's already in the que. 
 
-The problem was constrast ratio based on background and foreground colors.
+When you click on a result the data from the clicked result is sent to the server and added to an array called 'queList' (on the server). Once the data has been added to the array, the data will be sent back to all connected clients. The data will be shown in the (shared) playlist.
 
-![Contrast](readme-assets/contrast.png)
+![add](github/add.png)
 
-I checked the score of the color by using this amazing online tool called [Contrast Ratio](https://contrast-ratio.com/#%23cf4436-on-white)
+### Playing
+The oldest object in the 'queList' array will be the song that is being played. Once the song is done with playing on the client, a emit will be made to the server to remove the oldest object. This will only occur once per song, even if there are multiple users connected.
 
-![Contrast score](readme-assets/contrast-score.png)
+Each object contains an url to the song. This URL will be set as 'src' to an audio html tag on the client. There are checks to make this only happen when the currentTime of a song is 0 (finished). This is still buggy with multiple users, so it needs some revisioning.
 
-The score is 2.02, which is really bad! I fixed it by chaning the color to darkish red.
+A progress bar has been added so users can estimate how long the song will take and when it will end. The progress bar expands its width based on the duration the song has been played. The speed is based on the duration of the song. The width goes from 0% to 100%.
 
-![Contrast score red](readme-assets/contrast-score-red.png)
-
-Now the Audit also gives 100% on accessibility!
-
-![audit results](readme-assets/audit.png)
-
-> * 🛠 [Contrast Ratio](https://contrast-ratio.com/#%23cf4436-on-white)
+![play](github/play.png)
 
 <!-- Maybe a checklist of done stuff and stuff still on your wishlist? ✅ -->
 ## Wishlist
-- [ ] Rewrite fallback code for looping audio files
-- [ ] Rewrite code so the pleasureable functionality also works older browsers
+- [ ] Add the 'active' queList on connect (now only happens on search or if a song is done playing on someone elses client)
+- [ ] Fix the audio bug based on currenTime that occurs on the client
+- [ ] Rewrite code - no jQuery and components based
+- [ ] Play full songs
 
 <!-- Maybe I used some awesome sources that I can mention 🤔-->
 ## Sources
 Underneath you will find all the sources that were previously mentioned throughout the document and some others which were helpful.
 
-> * 🛠 [Contrast Ratio](https://contrast-ratio.com/#%23cf4436-on-white)
-> * 🛠 [Can I use](https://caniuse.com/)
+> * 🛠 [socket.io](https://socket.io/)
+> * 🛠 [Nuxt.Js](https://nuxtjs.org/)
+> * 🛠 [Spotify Developer site](https://developer.spotify.com/my-applications/)
+> * 🛠 [Web API Auth Example](https://github.com/spotify/web-api-auth-examples/tree/master/authorization_code)
+> * 🛠 [Spotify Web API Node](https://www.npmjs.com/package/spotify-web-api-node)
+> * 🛠 [Audio Progress Bar](https://codepen.io/mdf/pen/ZWbvBv)
+> * 🛠 [Color Hex](https://www.color-hex.com)
+> * 🛠 [Heroku](https://www.heroku.com)
 
-> * 📖 [Feature Detection](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Feature_detection)
-> * 📖 [WikiHow: Disable JavaScript](https://www.wikihow.com/Disable-JavaScript)
-> * 📖 [Blockmetry: JavaScript Disabled](https://blockmetry.com/blog/javascript-disabled)
-> * 📖 [DZONE: JavaScript remove() method](https://blockmetry.com/blog/javascript-disabled)
-> * 📖 [[Detect supported audio formats with JavaScript](https://davidwalsh.name/detect-supported-audio-formats-javascript)
+> * 📖 [Getting started with socket.io](https://socket.io/get-started/chat/)
+> * 📖 [What Socket.IO is](https://socket.io/docs/)
+> * 📖 [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+> * 📖 [How can I get the html5 audio's duration time](https://stackoverflow.com/questions/11203773/how-can-i-get-the-html5-audios-duration-time)
+> * 📖 [Creating A Spotify-Powered App Using Nuxt.js](https://www.smashingmagazine.com/2019/03/spotify-app-vue-nuxt-javascript/#top)
+> * 📖 [Scroll to bottom of Div on page load (jQuery)](https://stackoverflow.com/questions/10503606/scroll-to-bottom-of-div-on-page-load-jquery)
+> * 📖 [How do you detect when HTML5 audio has finished playing](https://stackoverflow.com/questions/11103582/how-do-you-detect-when-html5-audio-has-finished-playing-more-than-once)
+> * 📖 [Remove duplicates from an array of objects in JavaScript](https://stackoverflow.com/questions/2218999/remove-duplicates-from-an-array-of-objects-in-javascript)
+
+
+
 
 <!-- How about a license here? 📜 (or is it a licence?) 🤷 -->
 ## License 
