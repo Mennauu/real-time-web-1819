@@ -267,6 +267,11 @@ p {
   background-color: lightgray;
 }
 
+#sendMessage button {
+  background-color:#212121;
+  color: #fff;
+}
+
 .message {
   padding: 0.5em;
   display: flex;
