@@ -124,7 +124,7 @@ The goal was to learn about sockets before taking on the big challenge (which wa
 </details>
 
 ## Play Spotify Together
-With the Play Spotify Together app you can use your Spotify Account to search for songs and add them to a shared playlist in which you will listen to synchronously with other users of the app. You can also send messages to eachother.
+With the Play Spotify Together app you can use your Spotify Account to search for songs and add them to a shared playlist in which you will listen to, synchronously with other users of the app. You can also send messages to eachother.
 
 ![preview](github/preview.png)
 
